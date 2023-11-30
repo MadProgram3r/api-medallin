@@ -101,51 +101,201 @@ app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/ServidorExpress",(req,res)=>{
-    res.json({respuesta:"Contestando"})
-});
-
-app.get("/medicamentos", (req, res,next) => {
-    try {
-    throw new Error('Fallo aqui');
-    mysql.createConnection(mySQLConnection)
-        .then(conn => conn.query('SELECT * from medicamentos'))
-        .then(([rows, fields]) => res.json(rows));
-    } catch (e){
-        console.log(e.message);
-        er = new Error('Algo salio mal');
-        next(er);
-    }
-
-});
-
 /**
  * @swagger
 {
-  "swagger": "2.0",
+  "openapi": "3.0.1",
   "info": {
-    "version": "1.0.0",
     "title": "Farmacias API",
-    "description": "API para consultar información de farmacias"
+    "description": "API para consultar información de farmacias",
+    "version": "1.0.0"
   },
   "paths": {
-    "/farmacias/": {
-      "get": {
-        "tags": ["farmacias"],
-        "summary": "Consultar las farmacias",
-        "description": "Trae todas las farmacias",
+    "/medicamento-update/": {
+      "patch": {
+        "tags": [
+          "medicamentos"
+        ],
+        "summary": "Update Medicamentos",
+        "description": "Actualizar información de medicamentos",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID del medicamento a actualizar",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Parámetros indefinidos en el body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Operación exitosa",
             "content": {}
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Valor de estado no válido",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/medicamento-post/": {
+      "post": {
+        "tags": [
+          "medicamentos"
+        ],
+        "summary": "Crear Medicamentos",
+        "description": "Crear nuevos medicamentos",
+        "requestBody": {
+          "description": "Datos del medicamento a crear",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "Existencias",
+                  "IdSucursal",
+                  "Nombre",
+                  "Precio",
+                  "Tipo"
+                ],
+                "type": "object",
+                "properties": {
+                  "Nombre": {
+                    "type": "string",
+                    "description": "Nombre del medicamento"
+                  },
+                  "Precio": {
+                    "type": "number",
+                    "description": "Precio del medicamento"
+                  },
+                  "IdSucursal": {
+                    "type": "number",
+                    "description": "ID de la sucursal"
+                  },
+                  "Tipo": {
+                    "type": "string",
+                    "description": "Tipo del medicamento"
+                  },
+                  "Existencias": {
+                    "type": "integer",
+                    "description": "Cantidad de existencias"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {}
+          },
+          "400": {
+            "description": "Valor de estado no válido",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "body"
+      }
+    },
+    "/medicamento-delete/": {
+      "delete": {
+        "tags": [
+          "medicamentos"
+        ],
+        "summary": "Delete Medicamentos",
+        "description": "Eliminar un medicamento",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID del medicamento a eliminar",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {}
+          },
+          "400": {
+            "description": "Valor de estado no válido",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/medicamento-get/": {
+      "get": {
+        "tags": [
+          "medicamentos"
+        ],
+        "summary": "Get Medicamento",
+        "description": "Buscar un medicamento",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID del medicamento a buscar",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {}
+          },
+          "400": {
+            "description": "Valor de estado no válido",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/farmacias/": {
+      "get": {
+        "tags": [
+          "farmacias"
+        ],
+        "summary": "Consultar las farmacias",
+        "description": "Traer todas las farmacias",
+        "responses": {
+          "200": {
+            "description": "Operación exitosa",
+            "content": {}
+          },
+          "400": {
+            "description": "Valor de estado no válido",
+            "content": {}
           }
         }
       }
     }
-  }
+  },
+  "components": {},
+  "x-original-swagger-version": "2.0"
 }
  */
 
@@ -161,8 +311,14 @@ app.get("/farmacias/:id", (req, res) => {
         .then(([rows, fields]) => res.json(rows));
 });
 
-app.delete("/medicamentos", (req, res) => {
-    mysql.createConnection({host:'localhost', user:'root', password:'', database:'medicalsearch'})
+app.get("/medicamento-get", (req, res) => {
+    mysql.createConnection(mySQLConnection)
+        .then(conn => conn.query('SELECT * FROM medicamentos WHERE IdMedicamento = '+req.query.id))
+        .then(([rows, fields]) => res.json(rows));
+});
+
+app.delete("/medicamento-delete", (req, res) => {
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query('DELETE FROM medicamentos WHERE IdMedicamento = '+req.query.id))
         .then(([rows, fields]) => {
             if (rows.affectedRows) {
@@ -173,15 +329,17 @@ app.delete("/medicamentos", (req, res) => {
         })
 });
 
-app.post("/medicamentos", (req, res) => {
+app.post("/medicamento-post", (req, res) => {
     const Nombre = req.body['Nombre'];
     const Precio = req.body['Precio'];
     const IdSucursal = req.body['IdSucursal'];
     const Tipo = req.body['Tipo'];
     const Existencias = req.body['Existencias'];
 
+    console.log(req)
+
     // Verificar que los campos requeridos estén presentes
-    if (!Nombre || !Precio || !IdSucursal || !Tipo || Existencias === undefined) {
+    if (!Nombre || !Precio || !IdSucursal || !Tipo || !Existencias === undefined) {
         return res.status(400).json({ error: "Todos los campos son obligatorios." });
     }
 
@@ -239,7 +397,9 @@ app.post("/medicamentosUrlEncode", (req, res) => {
         });
 });
 
-app.patch("/medicamentos", (req,res) => {
+
+
+app.patch("/medicamento-update", (req,res) => {
     result = req.body;
     var query = 'UPDATE medicamentos SET ';
     var where = " WHERE IdMedicamento = "+req.query.id;
@@ -254,7 +414,7 @@ app.patch("/medicamentos", (req,res) => {
     })
     console.log(values);
     query = query + values.substring(0 , values.length -2) + where;
-    mysql.createConnection({host:'localhost', user:'root', password:'', database:'medicalsearch'})
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query(query))
         .then(([rows, fields]) => {
             if (rows.affectedRows) {
