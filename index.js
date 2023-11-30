@@ -15,6 +15,13 @@ const redoc = require('redoc-express');
 const swaggerUI     = require('swagger-ui-express');
 const swaggerJsDoc  = require('swagger-jsdoc');
 
+const PORT = process.env.PORT || 8080;
+const DBHOST = process.env.MYSQLHOST || 'localhost';
+const PWD = process.env.PWD || '';
+const DB = process.env.DB || 'medicalsearch';
+
+const mySQLConnection = { host: DBHOST, user: 'root', password: PWD, database: DB};
+
 const def = fs.readFileSync(path.join(__dirname,'./swaggerOptions.json'),
     {encoding:'utf8', flag:'r'});
 const read = fs.readFileSync(path.join(__dirname,'./README.MD'),{encoding:'utf8',flag:'r'})
@@ -101,7 +108,7 @@ app.get("/ServidorExpress",(req,res)=>{
 app.get("/medicamentos", (req, res,next) => {
     try {
     throw new Error('Fallo aqui');
-    mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'medicalsearch' })
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query('SELECT * from medicamentos'))
         .then(([rows, fields]) => res.json(rows));
     } catch (e){
@@ -143,13 +150,13 @@ app.get("/medicamentos", (req, res,next) => {
  */
 
 app.get("/farmacias", (req, res) => {
-    mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'medicalsearch' })
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query('SELECT * from farmacias'))
         .then(([rows, fields]) => res.json(rows));
 });
 
 app.get("/farmacias/:id", (req, res) => {
-    mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'medicalsearch' })
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query('SELECT * from farmacias where IdFarmacia = '+req.params.id))
         .then(([rows, fields]) => res.json(rows));
 });
@@ -184,7 +191,7 @@ app.post("/medicamentos", (req, res) => {
     }
 
     // Conectar a la base de datos y realizar la inserción
-    mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'medicalsearch' })
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query("INSERT INTO Medicamentos (IdSucursal, Nombre, Precio, Existencias, Tipo) VALUES (?,?,?,?,?)", [IdSucursal, Nombre, Precio, Existencias, Tipo]))
         .then(([rows, fields]) => {
             if (rows.affectedRows) {
@@ -217,7 +224,7 @@ app.post("/medicamentosUrlEncode", (req, res) => {
     }
 
     // Conectar a la base de datos y realizar la inserción
-    mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'medicalsearch' })
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query("INSERT INTO Medicamentos (IdSucursal, Nombre, Precio, Existencias, Tipo) VALUES (?,?,?,?,?)", [IdSucursal, Nombre, Precio, Existencias, Tipo]))
         .then(([rows, fields]) => {
             if (rows.affectedRows) {
@@ -262,7 +269,7 @@ app.post("/ServidorExpress",(req,res)=>
 {res.send("Servidor express contestando a peticion GET")
 });
 
-app.listen(8080,(req,res)=>{
+app.listen(PORT,(req,res)=>{
     console.log("Servidor express escuchando")
 });
 
@@ -282,7 +289,7 @@ app.post("/medicamentosMultipart",upload.none,(req, res) => {
         return res.status(400).json({ error: "Existencias debe ser un número válido." });
     }
 
-    mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'medicalsearch' })
+    mysql.createConnection(mySQLConnection)
         .then(conn => conn.query("INSERT INTO Medicamentos (IdSucursal, Nombre, Precio, Existencias, Tipo) VALUES (?,?,?,?,?)", [IdSucursal, Nombre, Precio, Existencias, Tipo]))
         .then(([rows, fields]) => {
             if (rows.affectedRows) {
