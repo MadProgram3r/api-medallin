@@ -20,8 +20,9 @@ const DBHOST = process.env.MYSQLHOST || 'localhost';
 const PWD = process.env.PWD || '';
 const DB = process.env.DB || 'medicalsearch';
 const USER = process.env.MYSQLUSER || 'root';
+const DBPORT = process.env.MYSQLPORT || '3306';
 
-const mySQLConnection = { host: DBHOST, user: 'root', password: PWD, database: DB};
+const mySQLConnection = { host: DBHOST, user: USER, password: PWD, database: DB, port:DBPORT};
 
 const def = fs.readFileSync(path.join(__dirname,'./swaggerOptions.json'),
     {encoding:'utf8', flag:'r'});
