@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8080;
 const DBHOST = process.env.MYSQLHOST || 'localhost';
 const PWD = process.env.PWD || '';
 const DB = process.env.DB || 'medicalsearch';
-const USER = process.env.MYSQLUSER || 'root';
+const USER =  'root';
 const DBPORT = process.env.MYSQLPORT || '3306';
 
 const mySQLConnection = { host: DBHOST, user: USER, password: PWD, database: DB, port:DBPORT};
