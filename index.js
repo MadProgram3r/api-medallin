@@ -110,6 +110,14 @@ app.use(express.urlencoded({ extended: true }));
     "description": "API para consultar información de farmacias",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "localhost:8080/",
+    },
+    {
+      "url":"https://api-medallin-production.up.railway.app/"
+    }
+  ],
   "paths": {
     "/medicamento-update/": {
       "patch": {
