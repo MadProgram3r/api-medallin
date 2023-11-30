@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 8080;
 const DBHOST = process.env.MYSQLHOST || 'localhost';
 const PWD = process.env.PWD || '';
 const DB = process.env.DB || 'medicalsearch';
+const USER = process.env.MYSQLUSER || 'root';
 
 const mySQLConnection = { host: DBHOST, user: 'root', password: PWD, database: DB};
 
@@ -112,7 +113,7 @@ app.use(express.urlencoded({ extended: true }));
   },
   "servers": [
     {
-      "url": "localhost:8080/",
+      "url": "http://localhost:8080/",
     },
     {
       "url":"https://api-medallin-production.up.railway.app/"
