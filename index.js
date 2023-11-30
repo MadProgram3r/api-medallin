@@ -360,7 +360,7 @@ app.post("/medicamento-post", (req, res) => {
 
     // Conectar a la base de datos y realizar la inserción
     mysql.createConnection(mySQLConnection)
-        .then(conn => conn.query("INSERT INTO Medicamentos (IdSucursal, Nombre, Precio, Existencias, Tipo) VALUES (?,?,?,?,?)", [IdSucursal, Nombre, Precio, Existencias, Tipo]))
+        .then(conn => conn.query("INSERT INTO medicamentos (IdSucursal, Nombre, Precio, Existencias, Tipo) VALUES (?,?,?,?,?)", [IdSucursal, Nombre, Precio, Existencias, Tipo]))
         .then(([rows, fields]) => {
             if (rows.affectedRows) {
                 res.status(201).json({message : "Medicamento agregado con exito"});
