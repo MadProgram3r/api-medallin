@@ -22,7 +22,7 @@ const DB = process.env.DB || 'medicalsearch';
 const USER =  'root';
 const DBPORT = process.env.MYSQLPORT || '3306';
 
-const mySQLConnection = { host: DBHOST, user: USER, password: PWD, database: DB, port:DBPORT};
+const mySQLConnection = { host: DBHOST, user: USER, password: 'DG1hD433dBAEhe5hF-Ea6Gf1H1bh1CGC', database: DB, port:DBPORT};
 
 const def = fs.readFileSync(path.join(__dirname,'./swaggerOptions.json'),
     {encoding:'utf8', flag:'r'});
