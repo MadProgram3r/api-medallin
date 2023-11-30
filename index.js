@@ -430,7 +430,7 @@ app.post("/ServidorExpress",(req,res)=>
 });
 
 app.listen(PORT,(req,res)=>{
-    console.log("Servidor express escuchando")
+    console.log("Servidor express escuchando en "+PORT)
 });
 
 app.post("/medicamentosMultipart",upload.none,(req, res) => {
