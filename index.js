@@ -440,6 +440,7 @@ app.post("/ServidorExpress",(req,res)=>
 });
 
 app.listen(PORT,(req,res)=>{
+    console.log(mySQLConnection);
     console.log("Servidor express escuchando en "+PORT)
 });
 
@@ -476,5 +477,6 @@ app.post("/medicamentosMultipart",upload.none,(req, res) => {
 });
 
 app.use((err,req, res, next) => {
+
     res.status(500).send(err.message);
 })
